@@ -30,31 +30,32 @@
 
     <form action="" onsubmit="event.preventDefault();onFormSubmit()">
         <div>
-            <label for="">Full Name : </label>
+            <label for="">FIRSTNAME: </label>
             <input type="text" name="firstname" id="firstname" required>
         </div><br>
         <div>
-            <label for="">Last Name : </label>
+            <label for="">LASTNAME: </label>
             <input type="text" name="lastname" id="lastname" required>
         </div><br>
         <div>
-            <label for="">Date of birth : </label>
+            <label for="">DOB: </label>
             <input type="date" name="dob" id="dob" required>
+
         </div>
         <br> <br>
         <div>
             <input type="submit" value="Submit">
         </div>
     </form>
-
     <br> <br>
 
+    <p id="my-search"> Search : <input id="search-input" type="text"> </p>
 
     <table>
         <thead>
-            <th onClick="FirstName()"> FirstName </th>
-            <th onClick="LastName()"> LastName </th>
-            <th onClick="Dob()"> Date of birth </th>
+            <th onClick="sortByFirstName()"> FIRSTNAME</th>
+            <th onClick="sortByLastName()"> LASTNAME </th>
+            <th onClick="sortByDob()">DOB</th>
         </thead>
 
         <tbody id="table2">
@@ -128,12 +129,29 @@
 
         }
 
+        const searchInput = document.getElementById('search-input')
+        searchInput.addEventListener('input', (e) => {
+            let value = e.target.value
+            if (value === '') {
+                setList(persons)
+            } else if (value && value.trim().length > 0) {
+                value = value.trim().toLowerCase()
+                setList(persons.filter(person => {
+                    return person.firstname.indexOf(value) !== -1
+                    return person.dob.indexOf(value) !== -1
+                }))
+
+            } else {
+                clearList()
+            }
+        })
+
         function onFormSubmit() {
 
             var formData = readFormData()
             console.log(formData)
             insertNewRecord(formData)
-            resetForm()
+            // resetForm()
         }
 
         function readFormData() {
@@ -145,11 +163,24 @@
         }
 
         function insertNewRecord(data) {
+            let filteredData = persons.filter(val=> val.firstname == data.firstname);
 
-
-            persons.unshift(data)
-
+            if(filteredData.length == 0){
+                persons.unshift(data)
+            }
+            console.log(persons);
+            
             setList(persons)
+        }
+
+        function sortByFirstName() {
+            sortBy('firstname')
+        }
+        function sortByLastName() {
+            sortBy('lastname')
+        }
+        function sortByDOB() {
+            sortBy('dob')
         }
 
         var boolean = false
@@ -188,6 +219,7 @@
                     }
                     return comparison;
                 }
+                setList(persons.sort(compare))
             }
         }
 
@@ -200,6 +232,20 @@
             }
         });
 
+        // $(function () {
+
+        //     $('input[name^="firstname"]').change(function () {
+
+        //         var $current = $(this);
+
+        //         $('input[name^="firstname"]').each(function () {
+        //             if ($(this).val() == $current.val() && $(this).attr('id') != $current.attr('id')) {
+        //                 alert('duplicate found!');
+        //             }
+
+        //         });
+        //     });
+        // });
     </script>
 </body>
 
