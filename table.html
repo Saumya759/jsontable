@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Json Table</title>
 </head>
 <style>
@@ -40,7 +41,7 @@
             <label for="">Date of birth : </label>
             <input type="date" name="dob" id="dob" required>
         </div>
-<br> <br> 
+        <br> <br>
         <div>
             <input type="submit" value="Submit">
         </div>
@@ -84,7 +85,7 @@
                 "lastname": "Rajpoot",
                 "dob": "2012-04-05"
             }
-           
+
         ]
 
         setList(persons)
@@ -98,7 +99,7 @@
                 const tdItem1 = document.createElement('td')
                 const tdItem2 = document.createElement('td')
                 const tdItem3 = document.createElement('td')
-                
+
                 const firstname = document.createTextNode(person.firstname)
                 const lastname = document.createTextNode(person.lastname)
                 const dob = document.createTextNode(person.dob)
@@ -111,11 +112,11 @@
                 trItem.appendChild(tdItem1)
                 trItem.appendChild(tdItem2)
                 trItem.appendChild(tdItem3)
-             
+
 
                 document.getElementById('table2').appendChild(trItem);
             }
-           
+
         }
 
         function clearList() {
@@ -145,9 +146,9 @@
 
         function insertNewRecord(data) {
 
-   
+
             persons.unshift(data)
-           
+
             setList(persons)
         }
 
@@ -189,6 +190,15 @@
                 }
             }
         }
+
+        $('input[type="submit"]').attr('disabled', true);
+        $('input[type="text"]').on('keyup', function () {
+            if ($(this).val() != '') {
+                $('input[type="submit"]').attr('disabled', false);
+            } else {
+                $('input[type="submit"]').attr('disabled', true);
+            }
+        });
 
     </script>
 </body>
