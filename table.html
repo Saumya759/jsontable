@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Json Table</title>
+</head>
+<style>
+    table {
+        padding: 2%;
+        width: 50%;
+    }
+
+    th,
+    td {
+
+        padding: 1% 2% 1%;
+        border: 1px solid #777;
+    }
+
+    form {
+        padding: 25px;
+    }
+</style>
+
+<body>
+
+    <form action="" onsubmit="event.preventDefault();onFormSubmit()">
+        <div>
+            <label for="">FIRSTNAME: </label>
+            <input type="text" name="firstname" id="firstname" required>
+        </div><br>
+        <div>
+            <label for="">LASTNAME: </label>
+            <input type="text" name="lastname" id="lastname" required>
+        </div><br>
+        <div>
+            <label for="">DOB: </label>
+            <input type="date" name="dob" id="dob" required>
+
+        </div>
+        <br> <br>
+        <div>
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+    <br> <br>
+
+    <p id="my-search"> Search : <input id="search-input" type="text"> </p>
+
+    <table>
+        <thead>
+            <th onClick="sortByFirstName()"> FIRSTNAME</th>
+            <th onClick="sortByLastName()"> LASTNAME </th>
+            <th onClick="sortByDob()">DOB</th>
+        </thead>
+
+        <tbody id="table2">
+
+        </tbody>
+    </table>
+
+    <script>
+
+        var persons = [
+            {
+                "firstname": "Saim",
+                "lastname": "Pandey",
+                "dob": "1997-11-11"
+            },
+            {
+                "firstname": "Nupur",
+                "lastname": "Rathi",
+                "dob": "2000-06-04"
+            },
+            {
+                "firstname": "Akhil",
+                "lastname": "Raj",
+                "dob": "1998-09-23"
+            },
+            {
+                "firstname": "Pihu",
+                "lastname": "Rajpoot",
+                "dob": "2012-04-05"
+            }
+
+        ]
+
+        setList(persons)
+
+        function setList(group) {
+            clearList()
+            for (const person of group) {
+
+                const trItem = document.createElement('tr')
+
+                const tdItem1 = document.createElement('td')
+                const tdItem2 = document.createElement('td')
+                const tdItem3 = document.createElement('td')
+
+                const firstname = document.createTextNode(person.firstname)
+                const lastname = document.createTextNode(person.lastname)
+                const dob = document.createTextNode(person.dob)
+
+
+                tdItem1.appendChild(firstname)
+                tdItem2.appendChild(lastname)
+                tdItem3.appendChild(dob)
+
+                trItem.appendChild(tdItem1)
+                trItem.appendChild(tdItem2)
+                trItem.appendChild(tdItem3)
+
+
+                document.getElementById('table2').appendChild(trItem);
+            }
+
+        }
+
+        function clearList() {
+            let list = document.getElementById('table2')
+            while (list.firstChild) {
+                list.removeChild(list.firstChild)
+            }
+
+
+        }
+
+        const searchInput = document.getElementById('search-input')
+        searchInput.addEventListener('input', (e) => {
+            let value = e.target.value
+            if (value === '') {
+                setList(persons)
+            } else if (value && value.trim().length > 0) {
+                value = value.trim().toLowerCase()
+                setList(persons.filter(person => {
+                    return person.firstname.indexOf(value) !== -1
+                    return person.dob.indexOf(value) !== -1
+                }))
+
+            } else {
+                clearList()
+            }
+        })
+
+        function onFormSubmit() {
+
+            var formData = readFormData()
+            console.log(formData)
+            insertNewRecord(formData)
+            // resetForm()
+        }
+
+        function readFormData() {
+            var formData = {}
+            formData['firstname'] = document.getElementById('firstname').value
+            formData['lastname'] = document.getElementById('lastname').value
+            formData['dob'] = document.getElementById('dob').value
+            return formData
+        }
+
+        function insertNewRecord(data) {
+            let filteredData = persons.filter(val=> val.firstname == data.firstname);
+
+            if(filteredData.length == 0){
+                persons.unshift(data)
+            }
+            console.log(persons);
+            
+            setList(persons)
+        }
+
+        function sortByFirstName() {
+            sortBy('firstname')
+        }
+        function sortByLastName() {
+            sortBy('lastname')
+        }
+        function sortByDOB() {
+            sortBy('dob')
+        }
+
+        var boolean = false
+        function sortBy(by) {
+
+            boolean = !boolean
+
+            if (boolean) {
+
+                function compare(a, b) {
+
+                    const bandA = a[by].toLowerCase();
+                    const bandB = b[by].toLowerCase();
+
+                    let comparison = 0;
+                    if (bandA > bandB) {
+                        comparison = 1;
+                    } else if (bandA < bandB) {
+                        comparison = -1;
+                    }
+                    return comparison;
+                }
+
+                setList(persons.sort(compare))
+            } else {
+                function compare(a, b) {
+
+                    const bandA = a[by].toLowerCase();
+                    const bandB = b[by].toLowerCase();
+
+                    let comparison = 0;
+                    if (bandA < bandB) {
+                        comparison = 1;
+                    } else if (bandA > bandB) {
+                        comparison = -1;
+                    }
+                    return comparison;
+                }
+                setList(persons.sort(compare))
+            }
+        }
+
+        $('input[type="submit"]').attr('disabled', true);
+        $('input[type="text"]').on('keyup', function () {
+            if ($(this).val() != '') {
+                $('input[type="submit"]').attr('disabled', false);
+            } else {
+                $('input[type="submit"]').attr('disabled', true);
+            }
+        });
+
+    </script>
+</body>
+
+</html>
